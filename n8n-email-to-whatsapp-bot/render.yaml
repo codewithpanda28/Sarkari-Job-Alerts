@@ -7,12 +7,12 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: WEBHOOK_URL
-        value: https://n8n-server.onrender.com
+        value: https://n8n-server.onrender.com/webhook/sarkari-form
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
       - key: N8N_BASIC_AUTH_USER
-        value: admin
+        value: akashkumar.webdev@gmail.com
       - key: N8N_BASIC_AUTH_PASSWORD
-        value: 123456
+        value: ak123456789.?
       - key: GENERIC_TIMEZONE
         value: Asia/Kolkata
