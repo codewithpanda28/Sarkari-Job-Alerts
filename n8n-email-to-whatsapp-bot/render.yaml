@@ -1,18 +1,23 @@
 services:
   - type: web
-    name: n8n-server
+    name: n8n
     env: docker
-    repo: https://github.com/codewithpanda28/n8n-email-to-whatsapp-bot
-    branch: main
+    plan: free
+    autoDeploy: true
+    region: frankfurt
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: WEBHOOK_URL
-        value: https://sarkari-job-alerts-q4tc.onrender.com/webhook-test/form
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "true"
       - key: N8N_BASIC_AUTH_USER
-        value: akashkumar.webdev@gmail.com
+        value: admin
       - key: N8N_BASIC_AUTH_PASSWORD
-        value: ak123456789.?
+        value: admin123
+      - key: WEBHOOK_TUNNEL_URL
+        value: https://n8n-your-name.onrender.com
       - key: GENERIC_TIMEZONE
         value: Asia/Kolkata
+      - key: N8N_PORT
+        value: 5678
+      - key: N8N_HOST
+        value: 0.0.0.0
+      - key: N8N_PROTOCOL
+        value: https
