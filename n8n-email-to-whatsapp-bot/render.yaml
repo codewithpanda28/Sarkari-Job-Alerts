@@ -7,7 +7,7 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: WEBHOOK_URL
-        value: https://sarkari-job-alerts-2.onrender.com
+        value: https://sarkari-job-alerts-2.onrender.com/webhook/sarkari-alert
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
       - key: N8N_BASIC_AUTH_USER
