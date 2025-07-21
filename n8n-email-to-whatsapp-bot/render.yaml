@@ -1,1 +1,18 @@
-
+services:
+  - type: web
+    name: n8n-server
+    env: docker
+    repo: https://github.com/codewithpanda28/n8n-email-to-whatsapp-bot
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: WEBHOOK_URL
+        value: https://n8n-server.onrender.com
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: 123456
+      - key: GENERIC_TIMEZONE
+        value: Asia/Kolkata
