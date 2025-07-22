@@ -1,0 +1,641 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "757eee0e-9b15-4cf8-a808-39af78eaae58",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1024,
+        -160
+      ],
+      "id": "7d70f6cd-a81c-412b-9221-f0fadf6ff1a8",
+      "name": "Webhook",
+      "webhookId": "757eee0e-9b15-4cf8-a808-39af78eaae58"
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "name",
+              "stringValue": "={{ $json.body.name || $json.name || '' }}"
+            },
+            {
+              "name": "number",
+              "stringValue": "={{ $json.body.number || $json.number || '' }}"
+            },
+            {
+              "name": "date",
+              "stringValue": "={{ new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2011d634-2d79-461b-8c64-a427989f3f48",
+      "name": "Set Form Data2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -784,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ultramsg.com/instance134234/messages/chat",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "5ilyv4j5ci8if4nc"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.number }}"
+            },
+            {
+              "name": "body",
+              "value": "=📥 *New Form Submission*\n\n👤 *Name:* {{ $json.name }}\n📞 *Number:* {{ $json.number }}\n📅 *Submitted:* {{ $json.date }}\n\n✅ Thank you for subscribing to Sarkari Job alerts!\n\n#NewSubscriber #FormSubmission"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "94006eb0-2522-4f6a-bdd1-3e4740b6d46c",
+      "name": "Send WhatsApp Form Alert2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -544,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ",
+          "mode": "list",
+          "cachedResultName": "Sarkari Naukri ka WhatsApp Alert",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Set Form Data2').item.json.body.name }}",
+            "WhatsApp": "={{ $('Set Form Data2').item.json.body.number }}",
+            "Date": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "WhatsApp",
+              "displayName": "WhatsApp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "0ebc6457-917a-4989-9362-2ac1bd63710f",
+      "name": "Save to Google Sheets2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -304,
+        -160
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AKoU3jnZ0WZQqAqS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Form submitted successfully!\",\n  \"data\": {\n    \"name\": \"{{ $json.name }}\",\n    \"number\": \"{{ $json.number }}\",\n    \"submittedAt\": \"{{ $json.date }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "b35f9d70-351c-4349-8b0d-797cf0e0b16e",
+      "name": "Send Success Response2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const xmlData = $json[\"data\"];\n\nconst items = xmlData.match(/<item>(.*?)<\\/item>/gs);\nconst results = [];\n\nif (items) {\n  for (const item of items) {\n    const title = item.match(/<title>(.*?)<\\/title>/)?.[1] ?? '';\n    const link = item.match(/<link>(.*?)<\\/link>/)?.[1] ?? '';\n    const pubDate = item.match(/<pubDate>(.*?)<\\/pubDate>/)?.[1] ?? '';\n\n    const timestamp = new Date().toISOString();\n\n    results.push({\n      title,\n      link,\n      pubDate,\n      timestamp\n    });\n  }\n}\n\nreturn results.map(item => ({ json: item }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1088,
+        112
+      ],
+      "id": "ba1521fa-71cd-4a7f-b408-6e1990bd34e0",
+      "name": "Parse RSS Feed1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get new jobs from RSS feed\nconst newJobs = $items(\"Parse RSS Feed1\");\n// Get old jobs from Google Sheets\nconst oldJobs = $items(\"Get Last Job2\");\n\n// Create a Set of existing job titles for faster lookup\nconst existingTitles = new Set(oldJobs.map(job => job.json.title));\n\n// Filter out jobs that already exist\nconst freshJobs = newJobs.filter(job => {\n  return !existingTitles.has(job.json.title);\n});\n\n// Return only new jobs\nreturn freshJobs.length > 0 ? freshJobs : [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -608,
+        112
+      ],
+      "id": "0baa0ea6-61cf-4997-bc35-449e7ff23882",
+      "name": "Filter New Jobs1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9f881087-4bb6-4cd1-900f-f2a3d38aa32a",
+              "leftValue": "={{ $items('Filter New Jobs1').length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5f049fde-4e29-4e52-9cd4-473f2402dec5",
+      "name": "Check New Jobs Exist1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -368,
+        112
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get users data (should execute only once)\nconst users = $items(\"Get Users2\");\n// Get new jobs data\nconst newJobs = $items(\"Filter New Jobs1\");\n\nconst result = [];\n\n// Create combinations of users and jobs\nfor (const job of newJobs) {\n  for (const user of users) {\n    result.push({\n      json: {\n        // User data\n        WhatsApp: user.json.WhatsApp,\n        Name: user.json.Name,\n        // Job data\n        title: job.json.title,\n        link: job.json.link,\n        pubDate: job.json.pubDate,\n        timestamp: job.json.timestamp\n      }\n    });\n  }\n}\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        80
+      ],
+      "id": "68fa3f3c-395d-4462-bc5f-c5b92bf5331f",
+      "name": "Create User-Job Combinations1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ultramsg.com/instance134234/messages/chat",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "5ilyv4j5ci8if4nc"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.WhatsApp }}"
+            },
+            {
+              "name": "body",
+              "value": "=🚨📢 *Sarkari Job Alert!* 📢🚨\n\n📝 *Job Title:* {{ $json.title }}\n\n📅 *Date:* {{ \n  new Date($json.pubDate).toLocaleDateString(\"en-GB\", { \n    weekday: \"short\", \n    day: \"2-digit\", \n    month: \"short\", \n    year: \"numeric\" \n  }).replace(/ /g, ', ').replace(',', '') \n}}\n\n🔗 *Apply Link:* {{ $json.link }}\n\n⚠️ Don't Miss This Opportunity!\n\n#SarkariJob #GovernmentJob"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2f3b5ddb-11b5-4271-b609-6d86912d44e8",
+      "name": "Send WhatsApp Job Alert2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        304,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ",
+          "mode": "list",
+          "cachedResultName": "Sarkari Naukri ka WhatsApp Alert",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1533992784,
+          "mode": "list",
+          "cachedResultName": "getoldjobs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit#gid=1533992784"
+        },
+        "options": {}
+      },
+      "id": "a93097cf-3a72-4f9d-9a02-d36bb37f384e",
+      "name": "Get Last Job2",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -848,
+        112
+      ],
+      "typeVersion": 4.5,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AKoU3jnZ0WZQqAqS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ",
+          "mode": "list",
+          "cachedResultName": "Sarkari Naukri ka WhatsApp Alert",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "03183cb4-7f9c-4fe4-8062-350acdd43ebd",
+      "name": "Get Users2",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -144,
+        80
+      ],
+      "typeVersion": 4.5,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AKoU3jnZ0WZQqAqS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ",
+          "mode": "list",
+          "cachedResultName": "Sarkari Naukri ka WhatsApp Alert",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1533992784,
+          "mode": "list",
+          "cachedResultName": "getoldjobs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XSvRj8NYaBCTGreDEDgBbUKIBID4wPhyYuLlgP4-DhQ/edit#gid=1533992784"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "={{ $('Create User-Job Combinations1').item.json.title }}",
+            "link": "={{ $('Create User-Job Combinations1').item.json.link }}",
+            "pubDate": "={{ $('Create User-Job Combinations1').item.json.pubDate }}",
+            "timestamp": "={{ $('Create User-Job Combinations1').item.json.timestamp }}"
+          },
+          "matchingColumns": [
+            "title"
+          ],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "pubDate",
+              "displayName": "pubDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "6fae189a-9f30-4147-966b-ee6ba8ed2a59",
+      "name": "Update Last Job2",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        528,
+        80
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AKoU3jnZ0WZQqAqS",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://sarkariresult.com.cm/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1280,
+        112
+      ],
+      "id": "03bfaa85-8436-4986-be18-5c2895e06a25",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "id": "c4b5dd33-2499-479a-8234-86b63ec09de7",
+      "name": "RSS Check Every 1 Hour",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -1504,
+        112
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Form Data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Form Data2": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Form Alert2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Form Alert2": {
+      "main": [
+        [
+          {
+            "node": "Save to Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Send Success Response2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse RSS Feed1": {
+      "main": [
+        [
+          {
+            "node": "Get Last Job2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter New Jobs1": {
+      "main": [
+        [
+          {
+            "node": "Check New Jobs Exist1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check New Jobs Exist1": {
+      "main": [
+        [
+          {
+            "node": "Get Users2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User-Job Combinations1": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Job Alert2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Job Alert2": {
+      "main": [
+        [
+          {
+            "node": "Update Last Job2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Last Job2": {
+      "main": [
+        [
+          {
+            "node": "Filter New Jobs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Users2": {
+      "main": [
+        [
+          {
+            "node": "Create User-Job Combinations1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Parse RSS Feed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Check Every 1 Hour": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "RSS Check Every 1 Hour": [
+      {}
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a1d9f13a38a2df13d13effefd553a9b8cf01ac6ce7e4891f29ba60b928ca41ee"
+  }
+}
